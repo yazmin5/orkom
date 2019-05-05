@@ -1,0 +1,124 @@
+123
+	
+    EAX: accumulator
+    ECX: counter
+    EDX: data
+    EBX: base
+    ESP: stack pointer
+    EBP: base pointer
+    ESI: source index
+    EDI: destination index
+ 
+ 
+ 
+    CF: carry flag
+    PF: parity even flag
+    AF: auxiliary carry flag
+    ZF: zero flag
+    SF: sign flag
+    TF: trap flag
+    IF: interrupt enable flag
+    DF: direction flag
+    OF: overflow flag
+ 
+    [ADD]   Add Integers : Menambahkan nilai sumber ke tujuan, flag berubah sesuai hasil operasi. 
+    [AND}   Bitwise AND : Melakukan operasi bitwise AND dan menyimpan hasilnya ke tujuan, serta mereset OF dan CF
+    [BSWAP] Byte Swap : Menukar urutan byte dari little-endian ke big-endian atau sebaliknya. 
+    [BT]    Bit Test : Menguji satu bit dari sumber data pada indeks yang diberikan oleh operand kedua, dan menyimpan hasilnya ke carry flag.
+    [CALL]  Call Function : Memanggil fungsi dengan menyimpan EIP ke stack, lalu melompat ke alamat yang diberikan.
+    [CDQ]   Change Double to Quad : Memanjangkan (sign-extend) nilai di EAX menjadi EDX:EAX, biasanya dilakukan sebelum operasi DIV atau IDIV
+    [CLD]   Clear Direction Flag : Mereset direction flag (DF), untuk mengesetnya gunakan STD.
+    [CMP]   Compare Integers : Melakukan pengurangan, namun hasilnya tidak disimpan, hanya flag status yang berubah sesuai hasil operasi.
+    [CMPSB] Compare Strings : Membandingkan byte pada [ESI] dengan byte pada [EDI], flag status berubah sesuai hasil operasi, lalu menambah nilai ESI dan EDI (atau mengurangi jika DF=1). 
+                              Prefiks REPE atau REPNE dapat ditambahkan untuk mengulang instruksi hingga ECX kali sampai byte pertama yang berbeda atau sama ditemukan.
+    [DEC]   Decrement Integer : Mengurangkan nilai 1 dari tujuan, flag status (kecuali CF) berubah sesuai hasil operasi, lihat juga INC. 
+    [DIV]   Divide Unsigned Integer : Melakukan pembagian unsigned integer antara EDX:EAX dengan pembagi, hasil bagi disimpan ke EAX dan sisa bagi disimpan ke EDX. Untuk pembagian signed integer, lihat IDIV
+    [FINIT] Initialise Floating-Point Unit : Menginisialisasi FPU ke keadaan default, semua register ditandai kosong.
+    [IDIV]  Divide Signed Integer : Melakukan pembagian signed integer antara EDX:EAX dengan pembagi, hasil bagi disimpan ke EAX dan sisa bagi disimpan ke EDX. 
+    [IMUL]  Multiply Signed Integer : Melakukan perkalian signed integer antara EAX dengan pengali, hasilnya disimpan ke EDX:EAX. Untuk perkalian unsigned integer, lihat MUL.
+    [INC]   Increment Integer : Menambahkan nilai 1 ke tujuan, flag status (kecuali CF) berubah sesuai hasil operasi, lihat juga DEC. 
+    [INT]   Interrupt : Menimbulkan software interrupt dengan nomor vektor 0--255.
+ 
+[JCC]   Jump if Condition : Lompat ke alamat relatif (satu segmen) yang diberikan jika kondisi cc terpenuhi. Berikut rincian kondisi dan flag yang memicunya. Sebagai contoh, JE akan lompat hanya jika ZF=1. [contoh]
+No  Kode    Keterangan  Flag
+0   O   Overflow    OF=1
+1   NO  NoOverflow  OF=0
+2   B, C    Below, Carry    CF=1
+3   AE, NC  AboveEqual, NoCarry     CF=0
+4   E, Z    Equal, Zero     ZF=1
+5   NE, NZ  NotEqual, NoZero    ZF=0
+6   BE  BelowEqual  ZF=1 || CF=1
+7   A   Above   ZF=0 && CF=0
+8   S   Sign    SF=1
+9   NS  NoSign  SF=0
+10  P, PE   Parity, ParityEven  PF=1
+11  NP, PO  NoParity, ParityOdd     PF=0
+12  L   Lower   SF != OF
+13  GE  GreaterEqual    SF == OF
+14  LE  LowerEqual  ZF=1 || (SF != OF)
+15  G   Greate
+r   ZF=0 && (SF == OF)
+ 
+    [JECXZ] Jump if ECX Zero : Lompat pendek ke alamat relatif yang diberikan hanya jika ECX bernilai 0.
+    [JMP]   Jump : Lompat ke alamat yang diberikan, baik alamat relatif (satu segmen) atau alamat absolut (segmen:offset). [contoh]
+    [LEA]   Load Effective Addres : Menghitung alamat efektif memori yang diberikan dan menyimpannya ke register tujuan, misal: LEA EAX, [EBX + ECX*4 + 80].
+    [LODSB] Load from String : Menyalin byte pada [ESI] ke AL, lalu menambah nilai ESI (atau mengurangi jika DF=1). Prefiks REP dapat ditambahkan untuk mengulang instruksi hingga ECX kali.
+    [LOOP]  Loop with counter : Mengurangi register counter ECX dengan satu, dan jika counter belum bernilai nol, lompat ke label yang diberikan. LOOPE dan LOOPNE menambahkan kondisi zero flag untuk melompat.
+    [MOV]   Move : Menyalin isi dari sumber ke tujuan.
+    [MOVSB] Move String : Menyalin byte pada [ESI] ke byte pada [EDI], lalu menambah nilai ESI dan EDI (atau mengurangi jika DF=1). Prefiks REP dapat ditambahkan untuk mengulang instruksi hingga ECX kali.
+    [MUL]   Multiply Unsigned Integer : Melakukan perkalian unsigned integer antara EAX dengan pengali, hasilnya disimpan ke EDX:EAX. 
+    [NEG]   Negate: Two's Complement : Mengganti nilai sebelumnya dengan negasi komplemen dua.
+    [NOP]   No Operation : Tidak melakukan operasi apapun, sama dengan operasi XCHG EAX, EAX.
+    [NOT]   Bitwise NOT: One's Complement : Mengganti nilai sebelumnya dengan balikan komplemen satu. 
+    [OR]    Bitwise OR : Melakukan operasi bitwise OR dan menyimpan hasilnya ke tujuan, serta mereset OF dan CF. 
+    [POP]   Pop Data from Stack : Mengambil data dari stack ([ESP]) ke tujuan, lalu menambah nilai ESP sebesar 4. 
+    [POPA]  Pop All General-Purpose Register : Mengambil data dari stack ke EDI, ESI, EBP, ---, EBX, EDX, ECX, dan EAX. Balikan dari operasi PUSHA, namun nilai ESP tidak diambil dari stack. 
+    [POPF]  Pop Flags Register : Mengambil data dari stack ke register EFLAGS, lihat juga PUSHF. [contoh]
+    [PUSH]  Push Data on Stack : Mengurangi nilai ESP sebesar 4, lalu menyimpan data sumber ke dalam stack ([ESP])
+    [PUSHA] Push All General-Purpose Registers : Menyimpan nilai register EAX, ECX, EDX, EBX, ESP, EBP, ESI, dan EDI ke dalam stack, lalu mengurangi nilai ESP sebanyak 32. Nilai ESP yang di-push adalah nilai aslinya sebelum instruksi ini dijalankan, lihat juga POPA
+    [PUSHF] Push Flags Register : Menyimpan nilai register EFLAGS ke dalam stack, lihat juga POPF. [contoh]
+    [REP]   Repeat : Mengulang instruksi string hingga ECX kali. REPE dan REPNE menambahkan kondisi zero flag untuk melanjutkan perulangan.
+    [RET]   Return from Call : Mengambil EIP dari stack dan memindahkan kontrol ke alamat yang baru. Jika operand kedua ada, ESP akan ditambah sebanyak n setelah alamat return diambil.
+    [ROL]   Rotate Left : Melakukan operasi bitwise left rotation pada nilai yang diberikan. Jumlah bit yang diputar ditentukan oleh operand kedua.
+    [ROR]   Rotate Right : Melakukan operasi bitwise right rotation pada nilai yang diberikan. Jumlah bit yang diputar ditentukan oleh operand kedua.
+    [SCASB] Scan String : Membandingkan byte di AL dengan byte pada [EDI], flag status berubah sesuai hasil operasi, lalu menambah nilai ESI dan EDI (atau mengurangi jika DF=1). Prefiks REPE atau REPNE dapat ditambahkan untuk mengulang instruksi hingga ECX kali sampai byte pertama yang berbeda atau sama ditemukan.
+    [SHL]   Shift Left : Melakukan operasi logical left shift pada nilai yang diberikan, bit yang ditinggalkan diisi nol. Jumlah bit yang digeser ditentukan oleh operand kedua.
+    [SHR]   Shift Right : Melakukan operasi logical right shift pada nilai yang diberikan, bit yang ditinggalkan diisi nol. Jumlah bit yang digeser ditentukan oleh operand kedua.
+    [STD]   Set Direction Flag : Mengeset direction flag (DF), untuk meresetnya gunakan CLD.
+    [STOSB] Store Byte to String : Menyalin byte di AL ke [EDI], lalu menambah nilai EDI (atau mengurangi jika DF=1). Prefiks REP dapat ditambahkan untuk mengulang instruksi hingga ECX kali.
+    [SUB]   Subtract Integers : Mengurangkan nilai sumber ke tujuan, flag berubah sesuai hasil operasi. [contoh]
+    [XCHG]  Exchange : Menukar data antara dua lokasi.
+    [XOR]   Bitwise XOR : Melakukan operasi bitwise XOR dan menyimpan hasilnya ke tujuan, serta mereset OF dan CF. [contoh]
+ 
+ 
+JO      jump if overflow
+JNO     jump if not overflow
+JS      jump if sign
+JNS     jump if not sign
+JE      jump if equal
+JZ      jump if zero
+JNE     jump if not equal
+JNZ     jump if not zero
+JB      jump if below
+JNAE    jump if not above or equal
+JC      jump if carry
+JNB     jump if not below
+JAE     jump if above or equal
+JNC     jump if not carry
+JBE     jump if below or equal
+JNA     jump if not above
+JA      jump if above
+JNBE    jump if not below or equal
+JL      jump if less
+JNGE    jump if not greater or equal
+JGE     jump if greater or equal
+JNL     jump if not less
+JLE     jump if less of equal
+JNG     jump if not greater
+JNLE    jump if not less
+JP      jump if parity
+JPE     jump if parity even
+JNP     jump if not parity
+JPO     jump if parity odd
+JCXZ    jump if %cx register is 0
+JECXZ   jump if %ecx register is 0
